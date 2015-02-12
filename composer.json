@@ -1,0 +1,25 @@
+{
+	"name": "vanpattenmedia/asana-mailer",
+	"description": "Daily task list emails with Asana",
+	"type": "project",
+	"license": "BSD-3-Clause",
+	"config": {
+		"vendor-dir": "vendor/composer"
+	},
+	"authors": [
+		{
+			"name": "Chris Van Patten",
+			"email": "chris@vanpattenmedia.com"
+		}
+	],
+	"repositories": [
+		{
+			"type": "composer",
+			"url" : "http://wpackagist.org"
+		}
+	],
+	"require": {
+		"symfony/yaml": "~2.0",
+		"ajimix/asana-api-php-class": "*"
+	}
+}
