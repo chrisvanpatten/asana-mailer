@@ -17,7 +17,7 @@ class AsanaMailer {
 		 * Setup the YAML parser, load some yaml files
 		 */
 		$yaml       = new Parser();
-		$this->data = $yaml->parse( file_get_contents( 'asana.yml' ) );
+		$this->data = $yaml->parse( file_get_contents( 'data.yml' ) );
 
 		/**
 		 * Setup Asana

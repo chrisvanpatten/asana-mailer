@@ -1,0 +1,13 @@
+asana:
+  apiKey: "1234567890"
+  workspaces:
+    - "000000"
+    - "000000"
+mandrill:
+  apiKey: "00000000000"
+  fromName: "Asana Tasks"
+  fromEmail: "email@domain.com"
+  replyToEmail: "email@domain.com"
+  subject: "Asana tasks for %s" # use %s to insert current date
+  toName: "Recipient Name"
+  toEmail: "recipient@domain.com"
