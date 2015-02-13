@@ -2,6 +2,10 @@
 
 A simple tool to send yourself a daily email with a list of your Asana tasks.
 
+Here's what the email looks like:
+
+![](https://raw.githubusercontent.com/chrisvanpatten/asana-mailer/master/screenshot.png)
+
 ## Use
 
 Copy `data.example.yml` to `data.yml` and replace the dummy content with your data.
