@@ -83,6 +83,8 @@ class AsanaMailer {
 	function renderEmail() {
 		$content = '';
 
+		$content .= 'The following tasks are in your Asana list today.<br><br>';
+
 		foreach ( $this->workspaces as $workspace ) {
 			$content .= $this->renderWorkspaceTasks( $workspace );
 		}
@@ -117,10 +119,10 @@ class AsanaMailer {
 		if ( isset( $parent ) )
 			$content .= ' &rsaquo; ' . $parent;
 
-		if ( ! empty( $content ) )
-			return '<small style="color: #999; text-transform: uppercase; letter-spacing: 1px;">' . $content . '</small><br>';
-		else
-			return '';
+		if ( empty( $content ) )
+			$content = 'No Project Assigned';
+
+		return '<small style="color: #999; text-transform: uppercase; letter-spacing: 1px;">' . $content . '</small><br>';
 	}
 
 	/**
@@ -183,3 +185,5 @@ class AsanaMailer {
 $mailer = new AsanaMailer;
 
 echo $mailer->renderEmail();
+
+exit( 0 );
