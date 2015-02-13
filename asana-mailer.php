@@ -7,7 +7,9 @@ require_once( 'vendor/composer/autoload.php' );
 use Symfony\Component\Yaml\Parser;
 
 class AsanaMailer {
+	public $data;
 	public $asana;
+	public $mandrill;
 	public $workspaces;
 
 	function __construct() {
@@ -15,17 +17,27 @@ class AsanaMailer {
 		 * Setup the YAML parser, load some yaml files
 		 */
 		$yaml       = new Parser();
-		$asana_data = $yaml->parse( file_get_contents( 'asana.yml' ) );
+		$this->data = $yaml->parse( file_get_contents( 'asana.yml' ) );
 
 		/**
 		 * Setup Asana
 		 */
 		$this->asana = new Asana( array(
-			'apiKey' => $asana_data['apiKey'],
+			'apiKey' => $this->data['asana']['apiKey'],
 		) );
 
+		/**
+		 * Set up Mandrill
+		 */
+		$this->mandrill = new \Dustinmoorman\Mandrill\Mandrill(
+			$this->data['mandrill']['fromName'],
+			$this->data['mandrill']['fromEmail'],
+			$this->data['mandrill']['replyToEmail'],
+			$this->data['mandrill']['apiKey']
+		);
+
 		// Set the list of workspaces to grab from
-		$this->workspaces = $asana_data['workspaces'];
+		$this->workspaces = $this->data['asana']['workspaces'];
 	}
 
 	/**
@@ -75,12 +87,12 @@ class AsanaMailer {
 	}
 
 	/**
-	 * renderEmail
+	 * renderEmailHtml
 	 *
 	 * Generates HTML for the email to be sent
 	 * @return string
 	 */
-	function renderEmail() {
+	function renderEmailHtml() {
 		$content = '';
 
 		$content .= 'The following tasks are in your Asana list today.<br><br>';
@@ -151,7 +163,6 @@ class AsanaMailer {
 	 * @return string
 	 */
 	function renderDueDate( $date_due ) {
-		$date_today = new DateTime( 'now', new DateTimeZone('America/New_York') );
 		$date_due   = new DateTime( $date_due, new DateTimeZone('America/New_York') );
 
 		$date_due   = $date_due->format( 'd M Y' );
@@ -180,10 +191,24 @@ class AsanaMailer {
 
 		return $content;
 	}
+
+	public function sendEmail() {
+		$date_today = new DateTime( 'now', new DateTimeZone('America/New_York') );
+
+		$this->mandrill->setTitle( sprintf( $this->data['mandrill']['subject'], $date_today->format( 'd M Y' ) ) );
+		$this->mandrill->setHTML( $this->renderEmailHtml() );
+
+		$this->mandrill->addRecipient( $this->data['mandrill']['toEmail'], $this->data['mandrill']['toName'] );
+
+		return $this->mandrill->send();
+	}
 }
 
 $mailer = new AsanaMailer;
 
-echo $mailer->renderEmail();
+$mailing = $mailer->sendEmail();
 
-exit( 0 );
+if ( is_array( $mailing ) && isset( $mailing[0] ) && is_null( $mailing[0]->reject_reason ) )
+	exit( 0 );
+
+exit( 1 );

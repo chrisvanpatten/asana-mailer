@@ -16,10 +16,15 @@
 		{
 			"type": "composer",
 			"url" : "http://wpackagist.org"
+		},
+		{
+			"type": "vcs",
+			"url" : "https://github.com/dustinmoorman/mandrill"
 		}
 	],
 	"require": {
 		"symfony/yaml": "~2.0",
-		"ajimix/asana-api-php-class": "*"
+		"ajimix/asana-api-php-class": "*",
+		"dustinmoorman/mandrill": "dev-master"
 	}
 }
